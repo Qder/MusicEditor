@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MusicEditor.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,7 +19,7 @@ namespace MusicEditor.Controllers
     [HttpPost]
         public ActionResult Music()
         {
-            return;
+            return View(new PlayMusicViewModel());
         }
 
     }
