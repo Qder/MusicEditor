@@ -1,0 +1,109 @@
+﻿html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background-image:url("../Images/Background.jpg");
+}
+
+a:link,
+a:hover,
+a:visited,
+a:active {
+    text-decoration: none;
+}
+
+h1, h2, h3, p {
+    color:inherit;
+}
+
+.white-background {
+    background-color: rgba(250,250,250,0.3);
+}
+
+.content-wrapper {
+    width: 100%;
+    height: inherit;
+    height: 85px;
+}
+
+.float-left {
+    margin:0;
+    padding-left:50px;
+    float: left;
+}
+
+.float-right {
+    margin:0;
+    float: right;
+    padding-right:50px;
+}
+
+.center {
+     margin-left:auto;
+     margin-right:auto;
+}
+
+/*Header*/
+
+#login{
+    margin:0;
+    height: 25px;
+}
+
+#menu {
+    height: 60px;
+    display: block;
+    border: 0;
+    list-style-type: none;
+}
+
+ul#menu {
+    margin: 0 0 0px;
+    padding: 0;
+    text-align: right;
+}
+
+ul#menu li {
+    color: #ffffff;
+    display: inline;
+    list-style: none;
+    padding-left: 15px;
+}
+
+ul#menu li > a {
+    color:inherit;
+}
+
+/*Body*/
+
+#body {
+    margin-top:20px;
+    margin-bottom:20px;
+    height:100%;
+    width:1280px;
+    color: white;
+
+}
+
+#links {
+    display:inline-block;
+}
+
+#links > a {
+    margin-left:10px;
+    margin-right: 10px;
+}
+
+/*Footer*/
+
+footer {
+    color:white;
+}
+
+/*Music Editor*/
+
+.toolbar {
+    height:85px;
+}

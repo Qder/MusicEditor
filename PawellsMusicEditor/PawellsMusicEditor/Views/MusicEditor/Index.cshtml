@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "MusicEditor";
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+}
+<div class="white-background">
+    <div class="toolbar">
+        <div class="player">
+            <audio class="playsong" src="@Url.Content("~/Songs/EyesOnFire.mp3")">
+
+            </audio>
+            <audio class="playsong" src="@Url.Content("~/Songs/BehindBlueEyes.mp3")"></audio>
+            <div class="play">
+                PLAY
+            </div>
+            <div class="stop">
+                Stop
+            </div>
+            <div class="next">
+                NEXT
+            </div>
+            <div>
+
+            </div>
+        </div>
+    </div>
+</div>
