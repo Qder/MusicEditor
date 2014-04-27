@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DevBridge.Templates.WebProject.DataEntities.Entities
 {
-    public class Users : EntityBase<Users>
+    public class User : EntityBase<User>
     {
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
