@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace DevBridge.Templates.WebProject.DataEntities.Entities
 {
-    public class User : EntityBase<User>
+    public class SoundTracks : EntityBase<SoundTracks>
     {
-        public virtual string FirstName { get; set; }
-        public virtual string LastName { get; set; }
-        public virtual string Email { get; set; }
         public virtual int ID { get; set; }
+        public virtual string SoundTrackName { get; set; }
     }
 }

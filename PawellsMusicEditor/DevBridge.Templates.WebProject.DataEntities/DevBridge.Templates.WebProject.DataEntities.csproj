@@ -48,11 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\SoundTracks.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="Entities\UsersSongs.cs" />
     <Compile Include="EntityBase.cs" />
     <Compile Include="IEntity.cs" />
     <Compile Include="Mappings\EntityMapBase.cs" />
+    <Compile Include="Mappings\SoundTracksMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Mappings\UsersSongsMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

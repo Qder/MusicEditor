@@ -107,3 +107,17 @@ footer {
 .toolbar {
     height:85px;
 }
+
+.panel.mano {
+    background-color: #333;
+    color: white;
+    border-color: #008cba;
+}
+
+.panel.mano h5, .panel.mano p {
+    color:inherit;
+}
+
+a.th {
+    border: solid 4px #333;
+}

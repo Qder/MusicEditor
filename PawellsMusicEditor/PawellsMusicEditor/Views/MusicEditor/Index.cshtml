@@ -1,27 +1,51 @@
-﻿@{
+﻿@model PawellsMusicEditor.Models.SoundTrack
+
+@{
     ViewBag.Title = "MusicEditor";
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
-<div class="white-background">
-    <div class="toolbar">
-        <div class="player">
+<div class="large-12 columns">
+    <div class="panel mano player">
+        <audio class="playsong" data-songtitle="Eyes On Fire" src="@Url.Content("~/Songs/EyesOnFire.mp3")"></audio>
+        <audio class="playsong" data-songtitle="Behind Blue Eyes" src="@Url.Content("~/Songs/BehindBlueEyes.mp3")"></audio>
 
-            <audio class="playsong" data-songtitle="Eyes On Fire" src="@Url.Content("~/Songs/EyesOnFire.mp3")"></audio>
-            <audio class="playsong" data-songtitle="Behind Blue Eyes" src="@Url.Content("~/Songs/BehindBlueEyes.mp3")"></audio>
-            <div class="songtitle">Song title</div>
-            
-            <div class="play">
-                PLAY
-            </div>
-            <div class="stop">
-                STOP
-            </div>
-            <div class="next">
-                NEXT
-            </div>
-            <div class="slider">
+        <div class="row">
+            <div class="large-4 columns">
+                <h5 class="songtitle">Song title</h5>
 
+                <ul class="button-group">
+                    <li><a href="#" class="button small play"><i class="fa fa-play"></i></a></li>
+                    <li><a href="#" class="button small pause"><i class="fa fa-pause"></i></a></li>
+                    <li><a href="#" class="button small stop"><i class="fa fa-stop"></i></a></li>
+                    <li><a href="#" class="button small next"><i class="fa fa-step-forward"></i></a></li>
+                </ul>
+
+                <div id="currentTime"></div>
+                <div id="currentTimeSlider"></div>
             </div>
+            <div class="large-1 columns">
+                <i class="fa fa-volume-up"></i>
+                <div id="volume"> </div>
+                <i class="fa fa-volume-down"></i>
+            </div>
+            <div class="large-4 columns">
+            </div>
+            <div class="large-3 columns">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/from-data" }))
+                {
+                    <table>
+                        <tr>
+                            <td>File:</td>
+                            <td><input type="file" name="File" id="File" /></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td><input type="submit" name="submit" value="Upload" /></td>
+                        </tr>
+                    </table>
+                }
+            </div>
+
         </div>
     </div>
 </div>
