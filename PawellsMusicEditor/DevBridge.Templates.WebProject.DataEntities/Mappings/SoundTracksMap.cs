@@ -11,7 +11,6 @@ namespace DevBridge.Templates.WebProject.DataEntities.Mappings
     {
         public SoundTracksMap()
         {
-            Map(m => m.ID).Length(50).Not.Nullable();
             Map(m => m.SoundTrackName).Length(50).Not.Nullable();
         }
     }

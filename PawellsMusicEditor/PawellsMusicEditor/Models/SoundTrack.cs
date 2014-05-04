@@ -7,6 +7,6 @@ namespace PawellsMusicEditor.Models
 {
     public class SoundTrack
     {
-        public HttpPostedFileBase File { get; set; }
+        public HttpPostedFileBase Failas { get; set; }
     }
 }

@@ -8,7 +8,9 @@ namespace DevBridge.Templates.WebProject.DataEntities.Entities
 {
     public class SoundTracks : EntityBase<SoundTracks>
     {
-        public virtual int ID { get; set; }
         public virtual string SoundTrackName { get; set; }
+
     }
+
+
 }

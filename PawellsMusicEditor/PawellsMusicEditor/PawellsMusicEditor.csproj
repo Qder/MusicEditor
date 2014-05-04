@@ -52,6 +52,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -193,16 +194,17 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\StyleHome.css" />
+    <Content Include="Config\hibernate-configuration.config" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
-    <Content Include="Images\Background.jpg" />
-    <Content Include="Images\MusicEditor.jpg" />
+    <Content Include="Content\Images\Background.jpg" />
+    <Content Include="Content\Images\MusicEditor.jpg" />
     <Content Include="Scripts\jquery-2.1.0.js" />
     <Content Include="Scripts\jquery-2.1.0.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.js" />
     <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
     <Content Include="Scripts\JS.js" />
-    <Content Include="Songs\EyesOnFire.mp3" />
-    <Content Include="Songs\BehindBlueEyes.mp3" />
+    <Content Include="Content\Songs\EyesOnFire.mp3" />
+    <Content Include="Content\Songs\BehindBlueEyes.mp3" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -233,6 +235,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\MusicEditor\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DevBridge.Templates.WebProject.DataContracts\DevBridge.Templates.WebProject.DataContracts.csproj">
+      <Project>{a8169073-cfd3-4959-9281-b5f3e58538eb}</Project>
+      <Name>DevBridge.Templates.WebProject.DataContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DevBridge.Templates.WebProject.DataEntities\DevBridge.Templates.WebProject.DataEntities.csproj">
+      <Project>{0048b7e5-07ac-472d-92da-342cd9ef45d9}</Project>
+      <Name>DevBridge.Templates.WebProject.DataEntities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DevBridge.Templates.WebProject.Data\DevBridge.Templates.WebProject.Data.csproj">
+      <Project>{0dd4f9fb-8361-4847-aa04-3fe3afba7c75}</Project>
+      <Name>DevBridge.Templates.WebProject.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoundTrackChanges\SoundTrackChanges.csproj">
+      <Project>{6482a1a6-11b4-472d-89fa-5483a62142d5}</Project>
+      <Name>SoundTrackChanges</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

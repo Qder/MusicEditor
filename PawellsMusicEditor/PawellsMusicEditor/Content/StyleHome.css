@@ -4,7 +4,7 @@
 
 body {
     margin: 0;
-    background-image:url("../Images/Background.jpg");
+    background-image:url("../Content/Images/Background.jpg");
 }
 
 a:link,
@@ -120,4 +120,14 @@ footer {
 
 a.th {
     border: solid 4px #333;
+}
+
+#currentTimeSlider
+{
+    margin-bottom:15px;
+    margin-top:15px;
+}
+
+#File{
+    visibility:hidden;
 }

@@ -11,6 +11,10 @@ namespace DevBridge.Templates.WebProject.DataEntities.Entities
         public virtual string FirstName { get; set; }
         public virtual string LastName { get; set; }
         public virtual string Email { get; set; }
-        public virtual int ID { get; set; }
+        public virtual string UserName { get; set; }
+        public virtual string Password { get; set; }
+
+        public virtual IList<SoundTracks> Tracks { get; set; }
+
     }
 }
