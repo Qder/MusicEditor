@@ -6,10 +6,10 @@
     var nowPlaying = audioArray[i];
     var intv;
     var s = 0; //seconds
-    var m = 0; //minutes
-    nowPlaying.load();
+
 
     $(".play").on("click", function () {
+        nowPlaying.load();
         nowPlaying.volume = $("#volume").slider("value");
         nowPlaying.play();
         $("#currentTimeSlider").slider({
@@ -129,14 +129,84 @@
     $("#currentTimeSlider").slider({
         min: 0,
         step: 0.01,
-        value: nowPlaying.currentTime,
         slide: changeTime
-    })
+    }, function () {
+        if(nowPlaying != null)
+        {
+            $(this).slider({
+                value: nowPlaying.currentTime
+            })
+        }
+    });
 
     function changeTime() {
         nowPlaying.currentTime = $("#currentTimeSlider").slider("value");
     }
 
+    $("#File").on("change", function () {
+        $(this).parent("form").submit();
+    });
     
+    $("#button-to-upload").on("click", function () {
+        console.log("OK");
+        $("#File").trigger("click");
+    });
+
+    $("#button-to-edit").off("click");
+
+    //------------2-row---------------------
+
+    $("#selectable").selectable({
+        selected: function (event, ui) {
+
+            var song = ui.selected.children[0].attributes[2].nodeValue;
+
+            $("#button-to-edit").removeClass("disabled");
+            $("#button-to-edit").on("click", function () {
+
+            })
+            $("#button-to-remove").on("click", function (event) {
+                event.preventDefault();
+                var link = $(this).attr("href");
+                console.log(link);
+                $.ajax({
+                    type: "GET",
+                    url: link,
+                    data: {id: song}
+                }).done(function () {
+                    console.log("deleted");
+                }).fail(function () {
+                    console.log("failed");
+                });
+                $(this).remove();
+            });
+            
+        }
+    });
+
+    $(".draggable").draggable({
+        revert: true,
+        appendTo: "body",
+        helper: "clone"
+        
+    });
+
+    $("#droppable").droppable({
+        activeClass: "ui-state-default",
+        hoverClass: "ui-state-hover",
+        accept: ":not(.ui-sortable-helper)",
+        drop: function (event, ui) {
+            $(this).find(".placeholder").remove();
+            $("<div></div>").addClass("soundTrackBox").css("width", (nowPlaying.duration / 2) + "px").text(ui.draggable.text()).appendTo(this);
+
+        }
+    }).sortable({
+        items: "li:not(.placeholder)",
+        sort: function () {
+            // gets added unintentionally by droppable interacting with sortable
+            // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+            $(this).removeClass("ui-state-default");
+        }
+    });
 
 })();

@@ -129,5 +129,66 @@ a.th {
 }
 
 #File{
-    visibility:hidden;
+    display:none;
+}
+
+/* ---------------selectable----------------- */
+
+#feedback { 
+
+}
+
+#selectable .ui-selecting { 
+    background: #FECA40; 
+
+}
+
+  #selectable .ui-selected { 
+      background: #F39814;
+       color: white;
+  }
+
+  #selectable {
+       list-style-type: none;  
+       width: 100%; 
+
+  }
+
+  #selectable li, ol { 
+       color: white;
+       background: inherit;
+       margin-left:0;
+  }
+  /*-----------------------------------------------------------------------------*/
+
+  input#File {
+    width: 102px;
+    overflow:hidden;
+}
+
+#button-to-edit{
+
+}
+
+.f-dropdown {
+    width:auto;
+    border:none;
+    margin-top:0px;
+    background:none;
+    max-width: 70px;
+}
+
+.button{
+    margin:0;
+}
+
+.button-group{
+    margin:10px;
+}
+
+.soundTrackBox{
+    border: 1px solid red;
+    padding: 3px 4px;
+    display: inline-block;
+    clear:both;
 }

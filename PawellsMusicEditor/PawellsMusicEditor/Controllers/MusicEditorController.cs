@@ -68,5 +68,16 @@ namespace PawellsMusicEditor.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        
+        public ActionResult RemoveSoundTrack(int id)
+        {
+            IRepository repository = new Repository(SessionFactoryProvider);
+                repository.Delete<SoundTracks>(id);
+                repository.Commit();
+            
+           
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -5,11 +5,8 @@
     Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
 <div class="large-12 columns">
-    <div class="panel mano player">
-        @foreach (var songs in ViewBag.Songs)
-        {
-            <audio class="playsong" data-songtitle="@songs.SoundTrackName" src="@Url.Content("~/Content/Songs/" + @songs.SoundTrackName)"></audio>
-        }
+    <div class="panel mano">
+
         <div class="row">
             <div class="large-5 columns">
                 <h5 class="songtitle">Song title</h5>
@@ -24,27 +21,48 @@
 
                 <div id="currentTime">00:00</div>
                 <div id="currentTimeSlider"></div>
-                <div>
-                    @foreach (var songs in ViewBag.Songs)
-                    {
-                        <div>@songs.SoundTrackName<</div><br />
-                    }
-                </div>
             </div>
             <div class="large-1 columns">
                 <i class="fa fa-volume-up"></i>
                 <div id="volume"> </div>
                 <i class="fa fa-volume-down"></i>
             </div>
-            <div class="large-3 columns">
-            </div>
-            <div class="large-3 columns">
-                @using (Html.BeginForm("Index", "MusicEditor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            <div class="large-6 columns">
+                <h5>Actions</h5>
+                <ul class="button-group">
+                    <li><a href="#" class="button small"><i class="fa fa-plus" id="button-to-upload"></i></a></li>
+                    <li>
+                        <a href="#" class="button disabled small" id="button-to-edit" data-dropdown="drop1">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <ul id="drop1" data-dropdown-content class="f-dropdown">
+                            <li><a href="#" class="button small"><i class="fa fa-crop"></i></a></li>
+                            <li><a href="#" class="button small"><i class="fa fa-signal"></i></a></li>
+                            <li><a href="@Url.Action("RemoveSoundTrack", "MusicEditor", new { })" id="button-to-remove" class="button small"><i class="fa fa-minus" id="button-to-remove"></i></a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                @using (Html.BeginForm("Index", "MusicEditor", FormMethod.Post, new { enctype = "multipart/form-data", id = "upload-form" }))
                 {
-                    <input type="file" name="Failas" value="File" />
-                    <input type="submit" name="submit" value="Upload" />
+                    <input type="file" name="Failas" value="File" id="File" />
                 }
             </div>
         </div>
+        <div class="row">
+            <div class="large-4 columns">
+                <ol id="selectable">
+                    @foreach (var songs in ViewBag.Songs)
+                    {
+                        <li class="ui-widget-content draggable">
+                            <audio class="playsong" data-songtitle="@songs.SoundTrackName" data-id="@songs.Id" src="@Url.Content("~/Content/Songs/" + @songs.SoundTrackName)"></audio>
+                            @songs.SoundTrackName
+                        </li>
+                    }
+                </ol>
+            </div>
+            <div class="large-8 columns ui-widget-header" id="droppable" style="height: 50px">
+            </div>
         </div>
     </div>
+</div>
