@@ -6,24 +6,54 @@
     var nowPlaying = audioArray[i];
     var intv;
     var s = 0; //seconds
-
-
-    $(".play").on("click", function () {
+    if (nowPlaying != null) {
         nowPlaying.load();
-        nowPlaying.volume = $("#volume").slider("value");
+    }
+
+    var songsCount = $("#selectable").length;
+
+    function playSong(song)
+    {
+        $.each($("audio.playsong"), function () {
+            this.pause();
+        });
+        clearInterval(intv);
+
+        selectSong(song);
+        nowPlaying = audioArray[song];
+        nowPlaying.volume = 0.5;
         nowPlaying.play();
         $("#currentTimeSlider").slider({
-            max: nowPlaying.duration
+            min: 0,
+            max: nowPlaying.duration,
+            step: 0.01,
+            value: nowPlaying.currentTime,
+            slide: changeTime
         });
         callMeta();
         intv = setInterval(update, 500);
+
+        $("#range-slider").slider({
+            range: true,
+            min: 0.0,
+            max: nowPlaying.duration,
+            step: 0.01,
+            values: [0.0, nowPlaying.duration],
+            slide: function (event, ui) {
+
+            }
+        });
+    }
+
+    $(".play").on("click", function () {
+        playSong(i);
     });
 
     function update() {
         $("#currentTime").html(millisToSec(nowPlaying.currentTime));
         $("#currentTimeSlider").slider({
             value: nowPlaying.currentTime
-        })
+        });
     }
 
     function millisToSec(ms) {
@@ -54,6 +84,15 @@
 
     }
 
+    
+
+    function selectSong(song)
+    {
+        i = song;
+        $("#selectable > li").removeClass("ui-selected");
+        $("#selectable > li").eq(song).addClass("ui-selected");
+    }
+
     $(".stop").on("click", function () {
         nowPlaying.pause();
         nowPlaying.currentTime = 0;
@@ -62,6 +101,7 @@
         })
         $("#currentTime").html();
         clearInterval(intv);
+        update();
     })
 
     $(".pause").on("click", function () {
@@ -70,41 +110,16 @@
     })
 
     $(".next").on("click", function () {
-        if (audioArray[i+1] != null) {
-            $.each($("audio.playsong"), function () {
-                this.pause();
-            });
-            clearInterval(intv);
+        if (audioArray[i + 1] != null) {
             nowPlaying.currentTime = 0;
-
-            i++;
-            nowPlaying = audioArray[i];
-            nowPlaying.volume = 0.5;
-            nowPlaying.play();
-            $("#currentTimeSlider").slider({
-                max: nowPlaying.duration
-            });
-            callMeta();
-            intv = setInterval(update, 500);
+            playSong(++i);
         }
     })
 
     $(".previous").on("click", function () {
         if (i - 1 >= 0) {
-            $.each($("audio.playsong"), function () {
-                this.pause();
-            });
-            clearInterval(intv);
             nowPlaying.currentTime = 0;
-            i--;
-            nowPlaying = audioArray[i];
-            nowPlaying.volume = 0.5;
-            nowPlaying.play();
-            $("#currentTimeSlider").slider({
-                max: nowPlaying.duration
-            });
-            callMeta();
-            intv = setInterval(update, 500);
+            playSong(--i);
         }
     });
 
@@ -126,18 +141,7 @@
         nowPlaying.volume = $("#volume").slider("value");
     }
 
-    $("#currentTimeSlider").slider({
-        min: 0,
-        step: 0.01,
-        slide: changeTime
-    }, function () {
-        if(nowPlaying != null)
-        {
-            $(this).slider({
-                value: nowPlaying.currentTime
-            })
-        }
-    });
+    
 
     function changeTime() {
         nowPlaying.currentTime = $("#currentTimeSlider").slider("value");
@@ -147,66 +151,78 @@
         $(this).parent("form").submit();
     });
     
-    $("#button-to-upload").on("click", function () {
-        console.log("OK");
+    $("#button-to-upload").on("click", function (e) {
+        e.preventDefault();
         $("#File").trigger("click");
-    });
-
-    $("#button-to-edit").off("click");
+    })
 
     //------------2-row---------------------
+
+    var selected = false;
 
     $("#selectable").selectable({
         selected: function (event, ui) {
 
-            var song = ui.selected.children[0].attributes[2].nodeValue;
+            selected = true;
 
-            $("#button-to-edit").removeClass("disabled");
-            $("#button-to-edit").on("click", function () {
+            var songId = ui.selected.children[0].attributes[2].nodeValue;
+            var songTitle = ui.selected.children[0].attributes[1].nodeValue;
+            var c = ui.selected.attributes[0].nodeValue;
 
-            })
+            i = c;
+            
+            $(".edit-button-group .edit-button").removeClass("disabled");
+            //REMOVE
             $("#button-to-remove").on("click", function (event) {
                 event.preventDefault();
                 var link = $(this).attr("href");
-                console.log(link);
-                $.ajax({
-                    type: "GET",
-                    url: link,
-                    data: {id: song}
-                }).done(function () {
-                    console.log("deleted");
-                }).fail(function () {
-                    console.log("failed");
-                });
-                $(this).remove();
+                if (selected == true) {
+                    $.ajax({
+                        type: "GET",
+                        url: link,
+                        data: { id: songId }
+                    }).done(function () {
+                        console.log("deleted");
+                        location.reload(true);
+                    }).fail(function () {
+                        console.log("failed");
+                    });
+                }
+            });
+            //CROP
+
+            $("#crop-button").on("click", function (e) {
+                e.preventDefault();
+                var fromValue = Math.floor($("#range-slider").slider("values")[0]);
+                var toValue = Math.floor(nowPlaying.duration - $("#range-slider").slider("values")[1]);
+
+                if (selected == true) {
+                    var href = $(this).attr("href");
+                    $.ajax({
+                        url: href,
+                        type: "GET",
+                        data: { path: songTitle, from: fromValue, to: toValue }
+                    }).done(function () {
+                        console.log("croped");
+                        location.reload(true);
+                    }).fail(function () {
+                        console.log("failed");
+                    });
+                }
             });
             
         }
     });
 
-    $(".draggable").draggable({
-        revert: true,
-        appendTo: "body",
-        helper: "clone"
-        
-    });
-
-    $("#droppable").droppable({
-        activeClass: "ui-state-default",
-        hoverClass: "ui-state-hover",
-        accept: ":not(.ui-sortable-helper)",
-        drop: function (event, ui) {
-            $(this).find(".placeholder").remove();
-            $("<div></div>").addClass("soundTrackBox").css("width", (nowPlaying.duration / 2) + "px").text(ui.draggable.text()).appendTo(this);
-
-        }
-    }).sortable({
-        items: "li:not(.placeholder)",
-        sort: function () {
-            // gets added unintentionally by droppable interacting with sortable
-            // using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
-            $(this).removeClass("ui-state-default");
+    $(".edit-button-group .edit-button").on('click', function (e) {
+        if (selected == false) {
+            e.preventDefault();
         }
     });
+
+    /**
+     *  Range slider
+     */
+
 
 })();

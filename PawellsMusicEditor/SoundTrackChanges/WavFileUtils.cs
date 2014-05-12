@@ -5,13 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using NAudio;
 using NAudio.Wave;
+using NAudio.Lame;
+using System.IO;
 
 namespace SoundTrackChanges
 {
     public static class WavFileUtils
     {
-        public static void TrimWavFile(string inPath, string outPath, TimeSpan cutFromStart, TimeSpan cutFromEnd)
+        public static void TrimWavFile(string innPath, string outtPath, TimeSpan cutFromStart, TimeSpan cutFromEnd)
         {
+            string inPath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\NowEdited.WAV";
+            string outPath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\NowEdited2.WAV";
+            Mp3ToWav(innPath, inPath);
             using (WaveFileReader reader = new WaveFileReader(inPath))
             {
                 using (WaveFileWriter writer = new WaveFileWriter(outPath, reader.WaveFormat))
@@ -27,6 +32,8 @@ namespace SoundTrackChanges
 
                     TrimWavFile(reader, writer, startPos, endPos);
                 }
+                CheckAddBinPath();
+                ConvertWavToMp3(outPath, outtPath);
             }
         }
 
@@ -54,6 +61,44 @@ namespace SoundTrackChanges
             using (Mp3FileReader reader = new Mp3FileReader(mp3File))
             {
                 WaveFileWriter.CreateWaveFile(outputFile, reader);
+            }
+        }
+
+        public static byte[] ConvertWavToMp3(byte[] wavFile)
+        {
+
+            using (var retMs = new MemoryStream())
+            using (var ms = new MemoryStream(wavFile))
+            using (var rdr = new WaveFileReader(ms))
+            using (var wtr = new LameMP3FileWriter(retMs, rdr.WaveFormat, 128))
+            {
+                rdr.CopyTo(wtr);
+                return retMs.ToArray();
+            }
+        }
+
+        public static void ConvertWavToMp3(string WavFile, string outPutFile)
+        {
+            WaveFileReader rdr = new WaveFileReader(WavFile);
+            using (var wtr = new LameMP3FileWriter(outPutFile, rdr.WaveFormat, 128)) 
+            {
+                rdr.CopyTo(wtr);
+                return;
+            }
+        }
+
+        public static void CheckAddBinPath()
+        {
+            // find path to 'bin' folder
+            var binPath = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "bin" });
+            // get current search path from environment
+            var path = Environment.GetEnvironmentVariable("PATH") ?? "";
+
+            // add 'bin' folder to search path if not already present
+            if (!path.Split(Path.PathSeparator).Contains(binPath, StringComparer.CurrentCultureIgnoreCase))
+            {
+                path = string.Join(Path.PathSeparator.ToString(), new string[] { path, binPath });
+                Environment.SetEnvironmentVariable("PATH", path);
             }
         }
     }

@@ -29,18 +29,12 @@
             </div>
             <div class="large-6 columns">
                 <h5>Actions</h5>
-                <ul class="button-group">
-                    <li><a href="#" class="button small"><i class="fa fa-plus" id="button-to-upload"></i></a></li>
-                    <li>
-                        <a href="#" class="button disabled small" id="button-to-edit" data-dropdown="drop1">
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <ul id="drop1" data-dropdown-content class="f-dropdown">
-                            <li><a href="#" class="button small"><i class="fa fa-crop"></i></a></li>
-                            <li><a href="#" class="button small"><i class="fa fa-signal"></i></a></li>
-                            <li><a href="@Url.Action("RemoveSoundTrack", "MusicEditor", new { })" id="button-to-remove" class="button small"><i class="fa fa-minus" id="button-to-remove"></i></a></li>
-                        </ul>
-                    </li>
+                <ul class="button-group edit-button-group">
+                    <li><a href="#" class="button small" id="button-to-upload"><i class="fa fa-plus"></i></a></li>
+                    <li><a class="button small disabled edit-button" id="crop-button" href="@Url.Action("Crop", "MusicEditor", new { })"><i class="fa fa-crop"></i></a></li>
+                    <li><a class="button small disabled edit-button" href="#"><i class="fa fa-signal"></i></a></li>
+                    <li><a class="button small disabled edit-button" href="@Url.Action("RemoveSoundTrack", "MusicEditor", new { })" id="button-to-remove"><i class="fa fa-minus" id="button-to-remove"></i></a></li>
+                    <li><a class="button small disabled edit-button" href="#"><i class="fa fa-floppy-o"></i></a></li>
                 </ul>
 
                 @using (Html.BeginForm("Index", "MusicEditor", FormMethod.Post, new { enctype = "multipart/form-data", id = "upload-form" }))
@@ -50,19 +44,25 @@
             </div>
         </div>
         <div class="row">
-            <div class="large-4 columns">
+            <div class="large-5 columns" id="song-list">
                 <ol id="selectable">
+                    @{int i = 0;}
                     @foreach (var songs in ViewBag.Songs)
                     {
-                        <li class="ui-widget-content draggable">
+                        <li song="@i" class="select-me ui-widget-content">
                             <audio class="playsong" data-songtitle="@songs.SoundTrackName" data-id="@songs.Id" src="@Url.Content("~/Content/Songs/" + @songs.SoundTrackName)"></audio>
                             @songs.SoundTrackName
                         </li>
+                        i++;
                     }
                 </ol>
             </div>
-            <div class="large-8 columns ui-widget-header" id="droppable" style="height: 50px">
+
+            <div class="large-7 columns">
+                From: <wbr id="TimeFrom">00:00<wbr> To: <wbr id="TimeTo">00:00<wbr>
+                <div id="range-slider"></div>
             </div>
+            
         </div>
     </div>
 </div>

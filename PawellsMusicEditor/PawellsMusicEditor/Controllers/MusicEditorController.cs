@@ -13,6 +13,8 @@ using DevBridge.Templates.WebProject.Data.DataContext;
 using DevBridge.Templates.WebProject.DataContracts;
 using DevBridge.Templates.WebProject.DataEntities.Entities;
 
+using SoundTrackChanges;
+
 
 using NHibernate.Criterion;
 
@@ -77,6 +79,23 @@ namespace PawellsMusicEditor.Controllers
                 repository.Commit();
             
            
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Crop(string path, int from, int to)
+        {
+            path = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\" + path;
+
+            WavFileUtils.TrimWavFile(path, "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\edited.mp3",
+                TimeSpan.FromSeconds(from), TimeSpan.FromSeconds(to));
+
+            IRepository repository = new Repository(SessionFactoryProvider);
+
+            var soundTracks = new SoundTracks
+            {
+                SoundTrackName = "edited.mp3"
+            };
+            repository.Save(soundTracks);
             return RedirectToAction("Index");
         }
     }

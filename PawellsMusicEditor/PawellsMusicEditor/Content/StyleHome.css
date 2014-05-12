@@ -192,3 +192,11 @@ a.th {
     display: inline-block;
     clear:both;
 }
+
+
+/* Styles for song list*/
+
+#song-list li {
+    padding: 3px 5px;
+    overflow: hidden;
+}
