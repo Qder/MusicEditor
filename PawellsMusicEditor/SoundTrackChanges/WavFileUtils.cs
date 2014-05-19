@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NAudio;
 using NAudio.Wave;
+using NAudio.Dsp;
 using NAudio.Lame;
 using System.IO;
 
@@ -31,10 +32,13 @@ namespace SoundTrackChanges
                     int endPos = (int)reader.Length - endBytes;
 
                     TrimWavFile(reader, writer, startPos, endPos);
+                    reader.Dispose();
+                    writer.Dispose();
                 }
-                CheckAddBinPath();
                 ConvertWavToMp3(outPath, outtPath);
             }
+            File.Delete(inPath);
+            File.Delete(outPath);
         }
 
         private static void TrimWavFile(WaveFileReader reader, WaveFileWriter writer, int startPos, int endPos)
@@ -54,19 +58,47 @@ namespace SoundTrackChanges
                     }
                 }
             }
+            reader.Dispose();
+            writer.Dispose();
+        }
+
+        public static void CreateWaveFile2(string filename, IWaveProvider sourceProvider)
+        {
+            using (var writer = new WaveFileWriter(filename, sourceProvider.WaveFormat))
+            {
+                long outputLength = 0;
+                var buffer = new byte[sourceProvider.WaveFormat.AverageBytesPerSecond * 4];
+                while (true)
+                {
+                    int bytesRead = sourceProvider.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == 0)
+                    {
+                        // end of source provider
+                        break;
+                    }
+                    outputLength += bytesRead;
+                    // Write will throw exception if WAV file becomes too large
+                    if (bytesRead > 0)
+                    {
+                        writer.Write(buffer, 0, bytesRead);
+                    }
+                }
+                writer.Dispose();
+            }
         }
 
         public static void Mp3ToWav(string mp3File, string outputFile)
         {
             using (Mp3FileReader reader = new Mp3FileReader(mp3File))
             {
-                WaveFileWriter.CreateWaveFile(outputFile, reader);
+                CreateWaveFile2(outputFile, reader);
+                reader.Dispose();
             }
         }
 
         public static byte[] ConvertWavToMp3(byte[] wavFile)
         {
-
+            CheckAddBinPath();
             using (var retMs = new MemoryStream())
             using (var ms = new MemoryStream(wavFile))
             using (var rdr = new WaveFileReader(ms))
@@ -79,10 +111,13 @@ namespace SoundTrackChanges
 
         public static void ConvertWavToMp3(string WavFile, string outPutFile)
         {
+            CheckAddBinPath();
             WaveFileReader rdr = new WaveFileReader(WavFile);
-            using (var wtr = new LameMP3FileWriter(outPutFile, rdr.WaveFormat, 128)) 
+            using (var wtr = new LameMP3FileWriter(outPutFile, rdr.WaveFormat, 128))
             {
                 rdr.CopyTo(wtr);
+                rdr.Dispose();
+                wtr.Dispose();
                 return;
             }
         }
@@ -100,6 +135,72 @@ namespace SoundTrackChanges
                 path = string.Join(Path.PathSeparator.ToString(), new string[] { path, binPath });
                 Environment.SetEnvironmentVariable("PATH", path);
             }
+        }
+
+        public static void LowPassFilter(string innPath, string outtPath)
+        {
+            string inPath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\NowEdited.WAV";
+            string outPath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\NowEdited3.WAV";
+            
+            Mp3ToWav(innPath, inPath);
+            WaveFileReader reader = new WaveFileReader(inPath);
+            var myFilter = BiQuadFilter.LowPassFilter(44F, 0.4F, 0.5F);
+            WaveFileWriter writer = new WaveFileWriter(outPath, reader.WaveFormat);
+            
+
+            reader.Position = 0;
+            var endPos = reader.Length;
+            while (reader.Position < endPos)
+            {
+                int bytesRequired = (int)(endPos - reader.Position);
+                if (bytesRequired > 0)
+                {
+                    float[] sample = new float[4];
+                    for (int i=0; i < 2; i++)
+                    {
+                        sample[i] = myFilter.Transform(reader.ReadNextSampleFrame()[i]);
+                    }
+                        writer.WriteSamples(sample, 0, 4);
+                }
+            }
+            reader.Dispose();
+            writer.Dispose();
+            ConvertWavToMp3(outPath, outtPath);
+            File.Delete(inPath);
+            File.Delete(outPath);
+        }
+
+        public static void HighPassFilter(string innPath, string outtPath)
+        {
+            string inPath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\NowEdited.WAV";
+            string outPath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\NowEdited3.WAV";
+
+            Mp3ToWav(innPath, inPath);
+            WaveFileReader reader = new WaveFileReader(inPath);
+            var myFilter = BiQuadFilter.HighPassFilter(44F, 10F, 0.5F);
+            WaveFileWriter writer = new WaveFileWriter(outPath, reader.WaveFormat);
+
+
+            reader.Position = 0;
+            var endPos = reader.Length;
+            while (reader.Position < endPos)
+            {
+                int bytesRequired = (int)(endPos - reader.Position);
+                if (bytesRequired > 0)
+                {
+                    float[] sample = new float[4];
+                    for (int i = 0; i < 2; i++)
+                    {
+                        sample[i] = myFilter.Transform(reader.ReadNextSampleFrame()[i]);
+                    }
+                    writer.WriteSamples(sample, 0, 4);
+                }
+            }
+            reader.Dispose();
+            writer.Dispose();
+            ConvertWavToMp3(outPath, outtPath);
+            File.Delete(inPath);
+            File.Delete(outPath);
         }
     }
 }

@@ -40,7 +40,8 @@
             step: 0.01,
             values: [0.0, nowPlaying.duration],
             slide: function (event, ui) {
-
+                $("#timeFrom").html(millisToSec(ui.values[0]));
+                $("#timeTo").html(millisToSec(ui.values[1]));
             }
         });
     }
@@ -48,6 +49,7 @@
     $(".play").on("click", function () {
         playSong(i);
     });
+
 
     function update() {
         $("#currentTime").html(millisToSec(nowPlaying.currentTime));
@@ -180,7 +182,7 @@
                     $.ajax({
                         type: "GET",
                         url: link,
-                        data: { id: songId }
+                        data: { id: songId, songTitle:songTitle }
                     }).done(function () {
                         console.log("deleted");
                         location.reload(true);
@@ -190,6 +192,23 @@
                 }
             });
             //CROP
+
+            $("#crop").on("click", function (e) {
+                e.preventDefault();
+                $("#TimeAndSlider").removeClass("hidden");
+            });
+
+            $("#range-slider").slider({
+                range: true,
+                min: 0.0,
+                max: nowPlaying.duration,
+                step: 0.01,
+                values: [0.0, nowPlaying.duration],
+                slide: function (event, ui) {
+                    $("#timeFrom").html(millisToSec(ui.values[0]));
+                    $("#timeTo").html(millisToSec(ui.values[1]));
+                }
+            });
 
             $("#crop-button").on("click", function (e) {
                 e.preventDefault();
@@ -210,7 +229,22 @@
                     });
                 }
             });
-            
+            // save file
+            $("#saveFile").attr("href", "/MusicEditor/Download?fileName=" + songTitle);
+
+
+            //Filters
+            $("#filter").on("click", function (e) {
+                e.preventDefault();
+                $("#LowPassFilter").removeClass("hidden");
+                $("#HighPassFilter").removeClass("hidden");
+            });
+
+            //LowPassFilter
+            $("#LowPassFilter").attr("href", "/MusicEditor/LowPassFilter?path=" + songTitle);
+
+            //LowPassFilter
+            $("#HighPassFilter").attr("href", "/MusicEditor/HighPassFilter?path=" + songTitle);
         }
     });
 
@@ -219,10 +253,6 @@
             e.preventDefault();
         }
     });
-
-    /**
-     *  Range slider
-     */
 
 
 })();

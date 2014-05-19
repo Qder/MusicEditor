@@ -31,10 +31,11 @@
                 <h5>Actions</h5>
                 <ul class="button-group edit-button-group">
                     <li><a href="#" class="button small" id="button-to-upload"><i class="fa fa-plus"></i></a></li>
-                    <li><a class="button small disabled edit-button" id="crop-button" href="@Url.Action("Crop", "MusicEditor", new { })"><i class="fa fa-crop"></i></a></li>
+                    <li><a class="button small disabled edit-button" id="crop" href="#"><i class="fa fa-crop"></i></a></li>
                     <li><a class="button small disabled edit-button" href="#"><i class="fa fa-signal"></i></a></li>
-                    <li><a class="button small disabled edit-button" href="@Url.Action("RemoveSoundTrack", "MusicEditor", new { })" id="button-to-remove"><i class="fa fa-minus" id="button-to-remove"></i></a></li>
-                    <li><a class="button small disabled edit-button" href="#"><i class="fa fa-floppy-o"></i></a></li>
+                    <li><a class="button small disabled edit-button" id="button-to-remove" href="@Url.Action("RemoveSoundTrack", "MusicEditor", new { })"><i class="fa fa-minus"></i></a></li>
+                    <li><a class="button small disabled edit-button" id="saveFile" href="#"><i class="fa fa-floppy-o"></i></a></li>
+                    <li><a class="button small disabled edit-button" id="filter" href="#"><i class="fa fa-filter"></i></a></li>
                 </ul>
 
                 @using (Html.BeginForm("Index", "MusicEditor", FormMethod.Post, new { enctype = "multipart/form-data", id = "upload-form" }))
@@ -59,10 +60,16 @@
             </div>
 
             <div class="large-7 columns">
-                From: <wbr id="TimeFrom">00:00<wbr> To: <wbr id="TimeTo">00:00<wbr>
-                <div id="range-slider"></div>
-            </div>
-            
+                <div id="TimeAndSlider" class="hidden">
+                    Time from: <div id="timeFrom">00:00</div>
+                    Time to: <div id="timeTo">00:00</div>
+                    <div id="range-slider"></div>
+                    <a class="button small edit-button" id="crop-button" href="@Url.Action("Crop", "MusicEditor", new { })">Crop</a>
+                </div>
+                <a class="button small edit-button hidden" id="LowPassFilter" href="#">Low Pass Filter</a>
+                <a class="button small edit-button hidden" id="HighPassFilter" href="#">High Pass Filter</a>
+                
+
         </div>
     </div>
 </div>

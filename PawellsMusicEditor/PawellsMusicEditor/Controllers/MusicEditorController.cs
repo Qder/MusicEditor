@@ -25,13 +25,11 @@ namespace PawellsMusicEditor.Controllers
     public class MusicEditorController : Controller
     {
         private static readonly ISessionFactoryProvider SessionFactoryProvider = new SessionFactoryProvider();
-        //
-        // GET: /MusicEditor/
 
         public ActionResult Index()
         {
-            
-            
+
+
 
             IRepository repository = new Repository(SessionFactoryProvider);
 
@@ -60,42 +58,131 @@ namespace PawellsMusicEditor.Controllers
                 var path = Path.Combine(Server.MapPath("~/Content/Songs/"), fileName);
                 soundTrack.Failas.SaveAs(path);
 
-                 IRepository repository = new Repository(SessionFactoryProvider);
+                IRepository repository = new Repository(SessionFactoryProvider);
 
-                 var soundTracks = new SoundTracks
-                 {
-                     SoundTrackName = fileName
-                 };
-                 repository.Save(soundTracks);
+                var soundTracks = new SoundTracks
+                {
+                    SoundTrackName = fileName
+                };
+                repository.Save(soundTracks);
             }
             return RedirectToAction("Index");
         }
 
-        
-        public ActionResult RemoveSoundTrack(int id)
+
+        public ActionResult RemoveSoundTrack(int id, string songTitle)
         {
             IRepository repository = new Repository(SessionFactoryProvider);
-                repository.Delete<SoundTracks>(id);
-                repository.Commit();
-            
-           
+            repository.Delete<SoundTracks>(id);
+            repository.Commit();
+
+            System.IO.File.Delete("C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\" + songTitle);
             return RedirectToAction("Index");
         }
 
+        //path - file name
         public ActionResult Crop(string path, int from, int to)
         {
-            path = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\" + path;
+            //ppath - directory
+            string ppath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\";
+            string editedFile = "croped " + path;
+            for (int i = 0; i < 100; i++)
+            {
+                if (!System.IO.File.Exists(ppath + (i + 1) + editedFile))
+                {
+                    editedFile = (i + 1) + editedFile;
+                    WavFileUtils.TrimWavFile(ppath + path, ppath + editedFile, TimeSpan.FromSeconds(from), TimeSpan.FromSeconds(to));
+                    break;
+                }
+            }
 
-            WavFileUtils.TrimWavFile(path, "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\edited.mp3",
-                TimeSpan.FromSeconds(from), TimeSpan.FromSeconds(to));
 
             IRepository repository = new Repository(SessionFactoryProvider);
 
             var soundTracks = new SoundTracks
             {
-                SoundTrackName = "edited.mp3"
+                SoundTrackName = editedFile
             };
-            repository.Save(soundTracks);
+            if (editedFile.Length < 200)
+            {
+                repository.Save(soundTracks);
+            }
+            else
+            {
+            }
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Download(string fileName)
+        {
+            return File(@"C:\Users\Administratorius\Documents\GitHub\MusicEditor\PawellsMusicEditor\PawellsMusicEditor\Content\Songs\" + fileName, "application/mp3", fileName);
+        }
+
+
+        //path - file name
+        public ActionResult LowPassFilter(string path)
+        {
+            //ppath - directory
+            string ppath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\";
+            string editedFile = "filtered " + path;
+            for (int i = 0; i < 100; i++)
+            {
+                if (!System.IO.File.Exists(ppath + (i + 1) + editedFile))
+                {
+                    editedFile = (i + 1) + editedFile;
+                    WavFileUtils.LowPassFilter(ppath + path, ppath + editedFile);
+                    break;
+                }
+            }
+
+
+            IRepository repository = new Repository(SessionFactoryProvider);
+
+            var soundTracks = new SoundTracks
+            {
+                SoundTrackName = editedFile
+            };
+            if (editedFile.Length < 200)
+            {
+                repository.Save(soundTracks);
+            }
+            else
+            {
+            }
+            return RedirectToAction("Index");
+        }
+
+
+        //path - file name
+        public ActionResult HighPassFilter(string path)
+        {
+            //ppath - directory
+            string ppath = "C:\\Users\\Administratorius\\Documents\\GitHub\\MusicEditor\\PawellsMusicEditor\\PawellsMusicEditor\\Content\\Songs\\";
+            string editedFile = "filtered " + path;
+            for (int i = 0; i < 100; i++)
+            {
+                if (!System.IO.File.Exists(ppath + (i + 1) + editedFile))
+                {
+                    editedFile = (i + 1) + editedFile;
+                    WavFileUtils.HighPassFilter(ppath + path, ppath + editedFile);
+                    break;
+                }
+            }
+
+
+            IRepository repository = new Repository(SessionFactoryProvider);
+
+            var soundTracks = new SoundTracks
+            {
+                SoundTrackName = editedFile
+            };
+            if (editedFile.Length < 200)
+            {
+                repository.Save(soundTracks);
+            }
+            else
+            {
+            }
             return RedirectToAction("Index");
         }
     }
